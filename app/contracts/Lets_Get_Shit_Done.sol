@@ -1,43 +1,42 @@
 pragma solidity ^0.4.8;
-contract LetsGetShitDone {
-   uint seconds;
-   string goal;
-   uint startingTime;
+
+contract LetsGetShitDone
+{
+   int endTime;
    address beneficiaryAddress;
    address ownerAddress;
 
-   event NotTimeYet(uint timeLeft);
-   event Success(uint paidAmount, address owner, uint overTime);
-   event Fail(uint paidAmount, address beneficiary);
+   event NotTimeYet(int secondsLeft);
+   event Success(uint paidAmount, address owner, int secondsLeft);
+   event Fail(uint paidAmount, address beneficiary, int secondsLeft);
    event Deployed(uint currentTime);
 
-    function LetsGetShitDone(  address beneficiaryWhenYouFail, uint minutesUntilShitIsDone)  payable{
+    function LetsGetShitDone(  address beneficiaryWhenYouFail, int secondsToGetShitDone)  payable
+    {
         beneficiaryAddress = beneficiaryWhenYouFail;
         ownerAddress = msg.sender;
-        seconds = minutesUntilShitIsDone * 60;
-        goal = _goal;
-        startingTime = block.timestamp;
+        endTime = int(block.timestamp) + secondsToGetShitDone;
         this.transfer(msg.value);
-        Deployed(block.timestamp);
-    }
+    } 
 
     function Done(bool isDone) {
+
         if(msg.sender != ownerAddress)
             throw;
 
-        if(startingTime+(minutesUntilShitIsDone*60) < block.timestamp)
+        if(endTime  < int(block.timestamp))
         {
-            NotTimeYet( ( block.timestamp - startingTime - seconds)/60);
+            NotTimeYet(int(block.timestamp) - endTime);
             throw; 
         }
 
         if(isDone)
         {
-            Success(this.balance, ownerAddress);
+            Success(this.balance, ownerAddress, int(block.timestamp) - endTime);
             selfdestruct(ownerAddress);
         }
         else
-            Fail(this.balance, beneficiaryAddress);
+            Fail(this.balance, beneficiaryAddress, int(block.timestamp) - endTime);
             selfdestruct(beneficiaryAddress);
     }
 }
