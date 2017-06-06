@@ -1,31 +1,43 @@
 pragma solidity ^0.4.8;
 contract LetsGetShitDone {
-   uint minutesUntilShitIsDone;
+   uint seconds;
    string goal;
    uint startingTime;
    address beneficiaryAddress;
    address ownerAddress;
 
-    function LetsGetShitDone(  address _beneficiary, uint _minutesUntilShitIsDone, string _goal)  payable{
-        beneficiaryAddress = _beneficiary;
+   event NotTimeYet(uint timeLeft);
+   event Success(uint paidAmount, address owner, uint overTime);
+   event Fail(uint paidAmount, address beneficiary);
+   event Deployed(uint currentTime);
+
+    function LetsGetShitDone(  address beneficiaryWhenYouFail, uint minutesUntilShitIsDone)  payable{
+        beneficiaryAddress = beneficiaryWhenYouFail;
         ownerAddress = msg.sender;
-        minutesUntilShitIsDone = _minutesUntilShitIsDone;
+        seconds = minutesUntilShitIsDone * 60;
         goal = _goal;
         startingTime = block.timestamp;
         this.transfer(msg.value);
+        Deployed(block.timestamp);
     }
 
-    /* Send coins */
-    function done(bool isDone) {
-        if(msg.sender!=ownerAddress)
+    function Done(bool isDone) {
+        if(msg.sender != ownerAddress)
             throw;
 
         if(startingTime+(minutesUntilShitIsDone*60) < block.timestamp)
-            throw;
+        {
+            NotTimeYet( ( block.timestamp - startingTime - seconds)/60);
+            throw; 
+        }
 
         if(isDone)
+        {
+            Success(this.balance, ownerAddress);
             selfdestruct(ownerAddress);
+        }
         else
+            Fail(this.balance, beneficiaryAddress);
             selfdestruct(beneficiaryAddress);
     }
 }
