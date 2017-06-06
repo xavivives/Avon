@@ -2,9 +2,19 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import MyAwesomeReactComponent from './MyAwesomeReactComponent';
+import VerticalNonLinear from './VerticalNonLinear';
+
+
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+
+ var style = {
+  marginRight: 20,
+}; 
 
 class App extends Component {
+
+   
   render() {
     return (
       <div className="App">
@@ -17,8 +27,16 @@ class App extends Component {
         </p>
 
         <MuiThemeProvider>
-    <MyAwesomeReactComponent />
-  </MuiThemeProvider>
+            <div>
+            
+                <FloatingActionButton secondary={true} style={style}>
+                    <ContentAdd />
+                </FloatingActionButton>
+
+                <VerticalNonLinear/>
+
+            </div>
+        </MuiThemeProvider>
       </div>
     );
   }
