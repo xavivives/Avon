@@ -10,7 +10,7 @@ To build th UI
 `npm run build`
 
 To copy over the UI into '/dist'
-`"ui/build/**/*" dist`
+`cpx "ui/build/**/*" dist --watch`
 
 To start Ethereum RPC
 embark.simulator`
