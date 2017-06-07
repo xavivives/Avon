@@ -1,37 +1,23 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Creator from './Creator';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-
 import AppBar from 'material-ui/AppBar';
-import CurrencyUtils from './CurrencyUtils';
+import Creator from './Creator';
 
 injectTapEventPlugin();
  var style = {
   marginRight: 20,
 }; 
 
-
-/*
-<FloatingActionButton secondary={true} style={style}>
-                        <ContentAdd />
-                    </FloatingActionButton>*/
-
-
-
-
 class App extends Component {
    
   render() {
 
-    CurrencyUtils.getEtherPrice();
-
     var  style = {
       padding: 20
     };
+
     return (
       <div className="App">
         <MuiThemeProvider>
