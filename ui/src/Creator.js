@@ -35,13 +35,23 @@ class Creator extends React.Component {
 
         <TextField hintText="Hint Text" />
 
-        <br/><br/>
-
         <p>
             by the end of
         </p>
 
-        <DatePicker hintText="Portrait Dialog" />
+        <DatePicker hintText="Select a date" />
+
+        <p>
+            otherwise I will give away
+        </p>
+
+        <TextField hintText="Ether amount" />
+
+        <p>
+            to this address
+        </p>
+
+        <TextField hintText="Ethererum account address" />
 
       </div>
     );
