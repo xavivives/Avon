@@ -1,31 +1,19 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
  
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+
 class Creator extends React.Component {
 
-  state = {
-    stepIndex: 0,
-  };
-
-  handleNext = () => {
-    const {stepIndex} = this.state;
-    if (stepIndex < 2) {
-      this.setState({stepIndex: stepIndex + 1});
-    }
-  };
-
-  handlePrev = () => {
-    const {stepIndex} = this.state;
-    if (stepIndex > 0) {
-      this.setState({stepIndex: stepIndex - 1});
-    }
+  onCreateContract = () => {
+    window.SimpleStorage.set(10);
+    console.log("click");
   };
 
   
   render() {
-    const {stepIndex} = this.state;
 
     return (
       <div>
@@ -52,6 +40,12 @@ class Creator extends React.Component {
         </p>
 
         <TextField hintText="Ethererum account address" />
+        <p>
+            
+        </p>
+        <FloatingActionButton onTouchTap= {this.onCreateContract} secondary={true} >
+            <ContentAdd />
+        </FloatingActionButton>
 
       </div>
     );
