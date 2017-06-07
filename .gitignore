@@ -1,3 +1,5 @@
 /node_modules
 /dist
 .node-xmlhttprequest-sync*
+npm-debug.log
+chains.json
