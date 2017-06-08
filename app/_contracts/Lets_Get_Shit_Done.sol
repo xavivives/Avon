@@ -16,7 +16,7 @@ contract LetsGetShitDone
         beneficiaryAddress = beneficiaryWhenYouFail;
         ownerAddress = msg.sender;
         endTime = int(block.timestamp) + secondsToGetShitDone;
-        this.transfer(msg.value);
+        //this.transfer(msg.value);
     } 
 
     function Done(bool isDone) {
