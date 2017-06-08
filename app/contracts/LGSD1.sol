@@ -35,7 +35,7 @@ contract LGSD1
 
         commitments[msg.sender].push(commitment);
         this.transfer(msg.value);
-        CommitmentCreatedSuccesfully(commitments[msg.sender].length-1, endTimestamp - int(block.timestamp));
+        CommitmentCreatedSuccesfully(commitments[msg.sender].length-1, int(endTimestamp) - int(block.timestamp));
     } 
 
     function Done(uint commitmentId, bool isDone)
@@ -60,7 +60,7 @@ contract LGSD1
 
         if(isDone)
         {
-            msg.sendercommitments.transfer(commitments[msg.sender][commitmentId].amount);
+            msg.sender.transfer(commitments[msg.sender][commitmentId].amount);
             commitments[msg.sender][commitmentId].resolved = true;
             DoneAndFundsReturned(commitmentId,commitments[msg.sender][commitmentId].amount, msg.sender, int(commitments[msg.sender][commitmentId].endTimestamp) - int(block.timestamp));
         }
