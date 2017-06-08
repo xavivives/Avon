@@ -22,6 +22,9 @@ contract LGSD1
 
     function Commit(address beneficiary, uint endTimestamp)  payable
     {
+        if(msg.value == 0)
+            throw;
+            
         commitmentData memory commitment;
         commitment.beneficiary = beneficiary;
         commitment.endTimestamp = endTimestamp;
