@@ -2,7 +2,8 @@ pragma solidity ^0.4.8;
 
 contract LGSD1
 {
-    struct commitmentData{
+    struct commitmentData
+    {
         address beneficiary;
         uint endTimestamp;
         uint256 amount;
@@ -34,7 +35,10 @@ contract LGSD1
         commitment.resolved = false;
 
         commitments[msg.sender].push(commitment);
-        this.transfer(msg.value);
+
+        if(!this.send(msg.value))
+            throw;
+
         CommitmentCreatedSuccesfully(commitments[msg.sender].length-1, int(endTimestamp) - int(block.timestamp));
     } 
 
@@ -60,13 +64,17 @@ contract LGSD1
 
         if(isDone)
         {
-            msg.sender.transfer(commitments[msg.sender][commitmentId].amount);
+            if(!msg.sender.send(commitments[msg.sender][commitmentId].amount))
+                throw;
+                
             commitments[msg.sender][commitmentId].resolved = true;
             DoneAndFundsReturned(commitmentId,commitments[msg.sender][commitmentId].amount, msg.sender, int(commitments[msg.sender][commitmentId].endTimestamp) - int(block.timestamp));
         }
         else
         {
-            commitments[msg.sender][commitmentId].beneficiary.transfer(commitments[msg.sender][commitmentId].amount);
+            if(!commitments[msg.sender][commitmentId].beneficiary.send(commitments[msg.sender][commitmentId].amount))
+                throw;
+
             commitments[msg.sender][commitmentId].resolved = true;
             NotDoneAndFunsPaid(commitmentId,commitments[msg.sender][commitmentId].amount, msg.sender, int(commitments[msg.sender][commitmentId].endTimestamp) - int(block.timestamp));
         }
