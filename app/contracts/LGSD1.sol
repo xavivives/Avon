@@ -6,6 +6,7 @@ contract LGSD1
         address beneficiary;
         uint endTimestamp;
         uint256 amount;
+        bool resolved;
     }
 
     mapping (address => commitmentData[]) commitments;
@@ -14,7 +15,7 @@ contract LGSD1
    event NoTimeYet(uint commitmentId, int secondsLeft);
    event DoneAndFundsReturned(uint commitmentId, uint256 paidAmount, address owner, int secondsLeft);
    event NotDoneAndFunsPaid(uint commitmentId, uint256 paidAmount, address beneficiary, int secondsLeft);
-   event CommitmentIsFinalizedAlready(uint commitmentId);
+   event CommitmentIsResolvedAlready(uint commitmentId);
    event TheCommitmentYouAreLookingForDoesntExistOrYouHaventCreatedOneYet(uint commitmentId);
 
     function LGSD1()  payable
@@ -30,6 +31,7 @@ contract LGSD1
         commitment.beneficiary = beneficiary;
         commitment.endTimestamp = endTimestamp;
         commitment.amount = msg.value;
+        commitment.resolved = false;
 
         commitments[msg.sender].push(commitment);
         this.transfer(msg.value);
@@ -44,13 +46,13 @@ contract LGSD1
             throw;
         }
 
-        if(commitments[msg.sender][commitmentId].amount == 0) //amount == 0  means this function succesfull executed in the past already
+        if(commitments[msg.sender][commitmentId].resolved == true) //amount == 0  means this function succesfull executed in the past already
         {
-            CommitmentIsFinalizedAlready(commitmentId);
+            CommitmentIsResolvedAlready(commitmentId);
             throw;
         } 
             
-        if(commitments[msg.sender][commitmentId].endTimestamp  < block.timestamp) 
+        if(block.timestamp < commitments[msg.sender][commitmentId].endTimestamp ) 
         {
             NoTimeYet(commitmentId, int(commitments[msg.sender][commitmentId].endTimestamp) - int(block.timestamp));
             throw;
@@ -58,12 +60,14 @@ contract LGSD1
 
         if(isDone)
         {
-            msg.sender.transfer(commitments[msg.sender][commitmentId].amount);
+            msg.sendercommitments.transfer(commitments[msg.sender][commitmentId].amount);
+            commitments[msg.sender][commitmentId].resolved = true;
             DoneAndFundsReturned(commitmentId,commitments[msg.sender][commitmentId].amount, msg.sender, int(commitments[msg.sender][commitmentId].endTimestamp) - int(block.timestamp));
         }
         else
         {
             commitments[msg.sender][commitmentId].beneficiary.transfer(commitments[msg.sender][commitmentId].amount);
+            commitments[msg.sender][commitmentId].resolved = true;
             NotDoneAndFunsPaid(commitmentId,commitments[msg.sender][commitmentId].amount, msg.sender, int(commitments[msg.sender][commitmentId].endTimestamp) - int(block.timestamp));
         }
     }
