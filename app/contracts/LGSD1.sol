@@ -36,9 +36,6 @@ contract LGSD1
 
         commitments[msg.sender].push(commitment);
 
-        if(!this.send(msg.value))
-            throw;
-
         CommitmentCreatedSuccesfully(commitments[msg.sender].length-1, int(endTimestamp) - int(block.timestamp));
     } 
 
@@ -66,7 +63,7 @@ contract LGSD1
         {
             if(!msg.sender.send(commitments[msg.sender][commitmentId].amount))
                 throw;
-                
+
             commitments[msg.sender][commitmentId].resolved = true;
             DoneAndFundsReturned(commitmentId,commitments[msg.sender][commitmentId].amount, msg.sender, int(commitments[msg.sender][commitmentId].endTimestamp) - int(block.timestamp));
         }
