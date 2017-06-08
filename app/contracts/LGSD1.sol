@@ -2,6 +2,8 @@ pragma solidity ^0.4.8;
 
 contract LGSD1
 {
+    uint256 unknownFunds;
+    address owner;
     struct commitmentData
     {
         address beneficiary;
@@ -18,9 +20,12 @@ contract LGSD1
    event NotDoneAndFunsPaid(uint commitmentId, uint256 paidAmount, address beneficiary, int secondsLeft);
    event CommitmentIsResolvedAlready(uint commitmentId);
    event TheCommitmentYouAreLookingForDoesntExistOrYouHaventCreatedOneYet(uint commitmentId);
+   event GotFreeMoney(uint256 newAmount, uint256 unknowTotal);
 
     function LGSD1()  payable
     {
+        owner = msg.sender;
+        unknownFunds = 0;
     } 
 
     function Commit(address beneficiary, uint endTimestamp)  payable
@@ -78,6 +83,16 @@ contract LGSD1
     }
 
     function() payable { 
-    
+        unknownFunds += msg.value;
+        GotFreeMoney(msg.value, unknownFunds);
+    }
+
+    function WithdrawUnknownFunds()
+    {
+        if(msg.sender != owner)
+            throw;
+
+        if(!msg.sender.send(unknownFunds))
+            throw;
     }
 }
