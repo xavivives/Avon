@@ -1,24 +1,20 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-
 import AppBar from 'material-ui/AppBar';
 import Feed from './Feed';
 import Creator from './Creator';
 import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
-
 import IconButton from 'material-ui/IconButton';
 
 injectTapEventPlugin();
 
- var style = {
-  marginRight: 20,
-}; 
 
 class App extends Component {
    
-     constructor() {
+     constructor()
+     {
         super();
 
         this.state = {
@@ -31,22 +27,29 @@ class App extends Component {
        this.setState({
             currentPage: "Creator",    
         });
-    };
+    }
 
 
     onLeftIconTap = () =>
     {
         console.log("tap");
-        if(this.state.currentPage == "Feed")
+        if(this.state.currentPage === "Feed")
         {
             
         }
-        else if (this.state.currentPage == "Creator")
+        else if (this.state.currentPage === "Creator")
         {
             this.setState({
                 currentPage: "Feed",    
             });
         }
+    }
+
+    onCommitmentCreated = ()=>
+    {
+        this.setState({
+                currentPage: "Feed",    
+            });
     }
   
   render() {
@@ -58,14 +61,14 @@ class App extends Component {
     var content =<Feed onNewCommit={this.onNewCommit} />;
     var icon = <IconButton><MenuIcon/></IconButton>;
 
-    if(this.state.currentPage == "Feed")
+    if(this.state.currentPage === "Feed")
     {
         content =<Feed onNewCommit={this.onNewCommit} />;
         icon = <IconButton><MenuIcon/></IconButton>; 
     }
-    else if (this.state.currentPage == "Creator")
+    else if (this.state.currentPage === "Creator")
     {
-        content =<Creator/>;
+        content =<Creator onCommitmentCreated = {this.onCommitmentCreated}/>;
         icon = <IconButton><BackIcon/></IconButton>;
     }
 

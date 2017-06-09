@@ -10,18 +10,36 @@ bridge.CreateCommit = function(commitmentData)
     if(!this.allGood(true))
         return;
 
-    window.LGSD1.Commit(
+    window.LetsGetShitDone1.Commit(
+        commitmentData.goal,
         commitmentData.beneficiary,
         commitmentData.endTimestamp,
-        {value: window.web3.toWei(commitmentData.amount), gas: 500000}).then(function(value) {
-            console.log(value);
-      });
- 
+        {value: window.web3.toWei(commitmentData.amount), gas: 500000}).then(function(value)
+            {
+                console.log(value);
+        });
+}
+
+bridge.startWatch = function()
+{
+    if(!this.allGood(true))
+        return;
+
+    var filter = window.web3.eth.filter('latest');
+
+    filter.watch(function(error, result)
+    {
+        var block = window.web3.eth.getBlock(result, true);
+        console.log('block #' + block.number);
+        console.dir(block.transactions);
+    });
 }
 
 bridge.isWeb3Avaialable = function ()
 {
-    return window.web3 != undefined;
+    if(window.web3)
+        return true;
+    return false;
 }
 
 bridge.isConnectedToEtherumNode = function ()

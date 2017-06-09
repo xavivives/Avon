@@ -4,10 +4,6 @@ import DatePicker from 'material-ui/DatePicker';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
-
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-
 import EthereumBridge from './EthereumBridge';
 
 var addressesDirectory = {
@@ -50,6 +46,7 @@ class Creator extends React.Component {
     onCreateCommitment = () =>
     {
         EthereumBridge.CreateCommit(commitmentData);
+        this.props.onCommitmentCreated();
     };
 
     onGoalTextChanged = (e, newValue) =>
