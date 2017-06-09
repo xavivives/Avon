@@ -3,7 +3,8 @@ import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
- 
+import RaisedButton from 'material-ui/RaisedButton';
+
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
@@ -26,8 +27,8 @@ var goalTextSuggestions = [
     "make a Đapp",
     "run 100km",
     "close all my bank accounts",
-    "setup a Monero node"];
-
+    "setup a Monero node"
+];
 
 class Creator extends React.Component {
 
@@ -38,29 +39,16 @@ class Creator extends React.Component {
         this.state = {
             beneficiaryAddressKey: defaultAddressKey,
             beneficiaryAddress: addressesDirectory[defaultAddressKey],
-            goalText:""
+            goalText:"",
+            amountText: "",
+            allGood: false
         };
     }
 
-  onCreateContract = () => {
-    window.SimpleStorage.set(7).then(function(value) {
-      console.log(value);
-    });
-    console.log("click set");
-  };
-
-  onCreateContract2 = () => {
-    window.SimpleStorage.get().then(function(value) {
-      console.log(value);
-    });
-    console.log("click get");
-  };
-
-    onCreateContract3 = () => {
-    window.SimpleStorage.SimpleStorage(35).then(function(value) {
-      console.log(value);
-    });
-    console.log("click deploy");
+    onCreateContract = () => {
+      window.LGSD1.Commit(commitmentData).then(function(value) {
+        console.log(value);
+      });
     };
 
     onGoalTextChanged = (e, newValue) =>
@@ -68,16 +56,19 @@ class Creator extends React.Component {
         if(newValue.length > 50 )
             return;
 
-        commitmentData.goalText = newValue;
+        commitmentData.goal = newValue;
 
         this.setState({
             goalText: newValue
         });
+
+        this.checkIsAllGood();
     };
 
     onDateSelected = (e, date) =>
     {
         commitmentData.endTimestamp = date.getTime()/1000;
+        this.checkIsAllGood();
     };
 
     onAmountTextChanged = (e, newValue) =>
@@ -90,17 +81,36 @@ class Creator extends React.Component {
         this.setState({
             amountText:newValue
         });
+
+        this.checkIsAllGood();
     };
 
     onAddressSelected = (event, index, value) =>
     {
-        console.log(addressesDirectory[value]);
-
+        commitmentData.beneficiary = value;
         this.setState({
             beneficiaryAddressKey:value,
             beneficiaryAddress:addressesDirectory[value]
         });
+
+        this.checkIsAllGood();
     };
+
+    checkIsAllGood=()=>
+    {
+        var allGood = false;
+        if(commitmentData.goal &&
+            commitmentData.beneficiary &&
+            commitmentData.endTimestamp &&
+            commitmentData.amount)
+        allGood = true;
+
+        this.setState({
+            allGood: allGood
+        });
+    }
+
+
   
   render() {
 
@@ -114,7 +124,6 @@ class Creator extends React.Component {
             hintText = {goalTextSuggestions[Math.floor(Math.random()*goalTextSuggestions.length)]}
             value = {this.state.goalText}
             onChange = {this.onGoalTextChanged} />
-
         <p>
             by the end of
         </p>
@@ -122,7 +131,8 @@ class Creator extends React.Component {
         <DatePicker
             minDate = {new Date(Date.now() + (24*60*60*1000))}
             hintText = "Select a date"
-            onChange = {this.onDateSelected}/>
+            onChange = {this.onDateSelected}
+            autoOk = {true}/>
 
         <p>
             otherwise I will give away
@@ -132,6 +142,7 @@ class Creator extends React.Component {
             hintText="Ether amount"
             value = {this.state.amountText}
             onChange = {this.onAmountTextChanged}/>
+
         <p>
             to this address
         </p>
@@ -146,16 +157,12 @@ class Creator extends React.Component {
         <p>
             
         </p>
-        <FloatingActionButton onTouchTap= {this.onCreateContract} secondary={true} >
-            <ContentAdd />
-        </FloatingActionButton>
-
-        <FloatingActionButton onTouchTap= {this.onCreateContract2} secondary={false} >
-            <ContentAdd />
-        </FloatingActionButton> 
-        <FloatingActionButton onTouchTap= {this.onCreateContract3} secondary={false} >
-            <ContentAdd />
-        </FloatingActionButton>        
+        <RaisedButton
+          label = "Let's get shit done!"
+          secondary = {true}
+          onTouchTap = {this.onCreateContract}
+          disabled = {!this.state.allGood}
+        />       
       </div>
     );
   }
