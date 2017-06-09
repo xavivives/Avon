@@ -20,6 +20,15 @@ var commitmentData = {
     amount: null,
 }
 
+var goalTextSuggestions = [
+    "go to Mars",
+    "learn to play ukulele",
+    "make a Đapp",
+    "run 100km",
+    "close all my bank accounts",
+    "setup a Monero node"];
+
+
 class Creator extends React.Component {
 
     constructor() {
@@ -56,16 +65,31 @@ class Creator extends React.Component {
 
     onGoalTextChanged = (e, newValue) =>
     {
-        if(newValue.length < 50 )
-            this.setState({
-                goalText:newValue
-            });
+        if(newValue.length > 50 )
+            return;
 
+        commitmentData.goalText = newValue;
+
+        this.setState({
+            goalText: newValue
+        });
     };
 
     onDateSelected = (e, date) =>
     {
+        commitmentData.endTimestamp = date.getTime()/1000;
+    };
 
+    onAmountTextChanged = (e, newValue) =>
+    {
+        if (isNaN(newValue))
+            return;
+
+        commitmentData.amount = newValue;
+
+        this.setState({
+            amountText:newValue
+        });
     };
 
     onAddressSelected = (event, index, value) =>
@@ -86,7 +110,10 @@ class Creator extends React.Component {
             I'm going to
         </p>
 
-        <TextField hintText="Run 40k" value={this.state.goalText} onChange={this.onGoalTextChanged} />
+        <TextField
+            hintText = {goalTextSuggestions[Math.floor(Math.random()*goalTextSuggestions.length)]}
+            value = {this.state.goalText}
+            onChange = {this.onGoalTextChanged} />
 
         <p>
             by the end of
@@ -94,22 +121,24 @@ class Creator extends React.Component {
 
         <DatePicker
             minDate = {new Date(Date.now() + (24*60*60*1000))}
-            hintText="Select a date"
+            hintText = "Select a date"
             onChange = {this.onDateSelected}/>
 
         <p>
             otherwise I will give away
         </p>
 
-        <TextField hintText="Ether amount" defaultValue="0.1" />
-
+        <TextField
+            hintText="Ether amount"
+            value = {this.state.amountText}
+            onChange = {this.onAmountTextChanged}/>
         <p>
             to this address
         </p>
 
         <DropDownMenu value={this.state.beneficiaryAddressKey} onChange={this.onAddressSelected}>
-          <MenuItem value="Creator" primaryText="The creator of this Đapp" />
-          <MenuItem value="Empty" primaryText="New address" />
+          <MenuItem value="Creator" primaryText="the creator of this Đapp" />
+          <MenuItem value="Empty" primaryText="a new address" />
           <MenuItem value="Burn" primaryText="Burn the money" />
         </DropDownMenu>
 
