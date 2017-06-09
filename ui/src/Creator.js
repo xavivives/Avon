@@ -13,6 +13,13 @@ var addressesDirectory = {
     "Empty": ""
 }
 
+var commitmentData = {
+    goal:null,
+    beneficiary:null,
+    endTimestamp: null,
+    amount: null,
+}
+
 class Creator extends React.Component {
 
     constructor() {
@@ -21,7 +28,8 @@ class Creator extends React.Component {
         var defaultAddressKey = "Creator";
         this.state = {
             beneficiaryAddressKey: defaultAddressKey,
-            beneficiaryAddress: addressesDirectory[defaultAddressKey]
+            beneficiaryAddress: addressesDirectory[defaultAddressKey],
+            goalText:""
         };
     }
 
@@ -46,6 +54,20 @@ class Creator extends React.Component {
     console.log("click deploy");
     };
 
+    onGoalTextChanged = (e, newValue) =>
+    {
+        if(newValue.length < 50 )
+            this.setState({
+                goalText:newValue
+            });
+
+    };
+
+    onDateSelected = (e, date) =>
+    {
+
+    };
+
     onAddressSelected = (event, index, value) =>
     {
         console.log(addressesDirectory[value]);
@@ -64,13 +86,16 @@ class Creator extends React.Component {
             I'm going to
         </p>
 
-        <TextField hintText="Run 40k" />
+        <TextField hintText="Run 40k" value={this.state.goalText} onChange={this.onGoalTextChanged} />
 
         <p>
             by the end of
         </p>
 
-        <DatePicker hintText="Select a date" />
+        <DatePicker
+            minDate = {new Date(Date.now() + (24*60*60*1000))}
+            hintText="Select a date"
+            onChange = {this.onDateSelected}/>
 
         <p>
             otherwise I will give away
