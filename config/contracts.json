@@ -1,11 +1,10 @@
 {
   "default": {
-    "gas": "auto",
-    "contracts": {
-      "SimpleStorage": {
-        "args": [
-          100
-        ]
+    "gas":1000000 ,
+    "contracts":
+    {
+      "LetsGetShitDone1":{
+        "args":[]
       }
     }
   }
