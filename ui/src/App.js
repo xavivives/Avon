@@ -5,8 +5,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import AppBar from 'material-ui/AppBar';
 import Feed from './Feed';
 import Creator from './Creator';
-import BackIcon from './BackIcon.svg';
-import MenuIcon from './MenuIcon.svg';
+import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 
 import IconButton from 'material-ui/IconButton';
 
@@ -56,17 +56,17 @@ class App extends Component {
     };
 
     var content =<Feed onNewCommit={this.onNewCommit} />;
-    var icon = <IconButton>{MenuIcon}</IconButton>;
+    var icon = <IconButton><MenuIcon/></IconButton>;
 
     if(this.state.currentPage == "Feed")
     {
         content =<Feed onNewCommit={this.onNewCommit} />;
-        icon = <IconButton>{MenuIcon}</IconButton>; 
+        icon = <IconButton><MenuIcon/></IconButton>; 
     }
     else if (this.state.currentPage == "Creator")
     {
         content =<Creator/>;
-        icon = <IconButton>{BackIcon}</IconButton>;
+        icon = <IconButton><BackIcon/></IconButton>;
     }
 
     return (
