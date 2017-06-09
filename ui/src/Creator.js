@@ -8,6 +8,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
+import EthereumBridge from './EthereumBridge';
+
 var addressesDirectory = {
     "Creator": "0x99C2B57A30BeeDCDDE89f2445Af7E243E25784c8",
     "Burn": "0x0",
@@ -45,10 +47,9 @@ class Creator extends React.Component {
         };
     }
 
-    onCreateContract = () => {
-      window.LGSD1.Commit(commitmentData).then(function(value) {
-        console.log(value);
-      });
+    onCreateCommitment = () =>
+    {
+        EthereumBridge.CreateCommit(commitmentData);
     };
 
     onGoalTextChanged = (e, newValue) =>
@@ -87,7 +88,7 @@ class Creator extends React.Component {
 
     onAddressSelected = (event, index, value) =>
     {
-        commitmentData.beneficiary = value;
+        commitmentData.beneficiary = addressesDirectory[value];
         this.setState({
             beneficiaryAddressKey:value,
             beneficiaryAddress:addressesDirectory[value]
@@ -160,7 +161,7 @@ class Creator extends React.Component {
         <RaisedButton
           label = "Let's get shit done!"
           secondary = {true}
-          onTouchTap = {this.onCreateContract}
+          onTouchTap = {this.onCreateCommitment}
           disabled = {!this.state.allGood}
         />       
       </div>
