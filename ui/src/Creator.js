@@ -57,7 +57,7 @@ class Creator extends React.Component {
     };
   
   render() {
-    console.log(this);
+
     return (
       <div>
         <p>
