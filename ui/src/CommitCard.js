@@ -113,60 +113,60 @@ class CommitCard extends React.Component {
 
     onResolve = () =>
     {
-        this.props.data.onResolve(this.props.data.commitId);
+        this.props.onResolve(this.props.data.commitmentId);
     }
 
-  
-  render() {
+    render()
+    {
 
     var actionButton = null;
 
-    if(this.state.timeUp)
-    {
-        actionButton = <RaisedButton
-          label = "Resolve"
-          primary = {true}
-          onTouchTap = {this.onResolve}
-          disabled = {false}
-        /> 
-    }    
+        if(this.state.timeUp)
+        {
+            actionButton = <RaisedButton
+              label = "Resolve"
+              primary = {true}
+              onTouchTap = {this.onResolve}
+              disabled = {false}
+            /> 
+        }    
 
-    return (
-        <Paper style={containerStyle} zDepth={1} >
+        return (
+            <Paper style={containerStyle} zDepth={1} >
 
-            <div style = {timeStyle}>
+                <div style = {timeStyle}>
 
-                <div>
-                    <h3 style={{textAlign:"center", margin:5}}>
-                        {this.state.timeLeft}
-                    </h3>
+                    <div>
+                        <h3 style={{textAlign:"center", margin:5}}>
+                            {this.state.timeLeft}
+                        </h3>
+                    </div>
+                    <div>
+                        <h6 style={textStyle}>
+                            {this.state.timeScale}
+                        </h6>
+                    </div>
+
                 </div>
-                <div>
-                    <h6 style={textStyle}>
-                        {this.state.timeScale}
-                    </h6>
+
+
+                <div style = {goalStyle}>
+                    <p style={textStyle}>
+                        {this.state.connectionText}
+                    </p>
+
+                    <h5 style={textStyle}>
+                        {this.props.data.goal}
+                    </h5>
                 </div>
 
-            </div>
+                <div style = {actionButtonStyle}>
+                    {actionButton}
+                </div>
 
-
-            <div style = {goalStyle}>
-                <p style={textStyle}>
-                    {this.state.connectionText}
-                </p>
-
-                <h5 style={textStyle}>
-                    {this.props.data.goal}
-                </h5>
-            </div>
-
-            <div style = {actionButtonStyle}>
-                {actionButton}
-            </div>
-
-        </Paper>
-    );
-  }
+            </Paper>
+        );
+    }
 }
 
 export default CommitCard;
