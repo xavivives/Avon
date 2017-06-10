@@ -1,6 +1,6 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
-
+import RaisedButton from 'material-ui/RaisedButton';
 
 const containerStyle =
 {
@@ -11,7 +11,8 @@ const containerStyle =
     alignItems: 'center',
     height : 100,
     padding : 15,
-    margin : 20
+    marginTop : 10,
+    margnBottom : 30
 }
 
 const timeStyle =
@@ -20,7 +21,8 @@ const timeStyle =
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems:'center',
-    flexBasis:100
+    flexBasis:120,
+    flexGrow: 1
 }
 
 const goalStyle =
@@ -32,18 +34,33 @@ const goalStyle =
     flexGrow: 2
 }
 
+const actionButtonStyle = 
+{
+    flexBasis:120,
+    flexGrow: 1
+}
+
 const textStyle = 
 {
     margin:5
 }
+
+
 
 class CommitCard extends React.Component {
 
     constructor(props) {
         super();
         //EthereumBridge.startWatch();
-
+        var timeUp = false;
         var secondsLeft = props.endTimestamp - (Date.now()/1000);
+
+        if (secondsLeft < 0)
+        {
+            timeUp = true;
+            secondsLeft = 0-secondsLeft;
+        }
+
         var minutesLeft = secondsLeft/60;
         var hoursLeft = minutesLeft/60;
         var daysLeft = hoursLeft/24;
@@ -67,13 +84,20 @@ class CommitCard extends React.Component {
             timeLeft = Math.round(minutesLeft);
         }
 
+        if(timeUp===true && props.state=== "ongoing")
+        {
+            timeLeft = "Time \nOut!"
+            timeScale = "";
+        }
+
         this.state = {
             "timeScale": timeScale,
-            "timeLeft": timeLeft 
+            "timeLeft": timeLeft,
+            "timeUp": timeUp,
         };
     }
 
-    onNewCommit = () => {
+    onResolve = () => {
 
         //this.props.onNewCommit();
     }
@@ -81,20 +105,33 @@ class CommitCard extends React.Component {
   
   render() {
 
+    var actionButton = null;
+
+    if(this.state.timeUp)
+    {
+        actionButton = <RaisedButton
+          label = "Resolve"
+          primary = {true}
+          onTouchTap = {this.onResolve}
+          disabled = {false}
+        /> 
+    }
+        
+
     return (
         <Paper style={containerStyle} zDepth={1} >
 
             <div style = {timeStyle}>
 
                 <div>
-                    <h1 style={textStyle}>
+                    <h3 style={{textAlign:"center", margin:5}}>
                         {this.state.timeLeft}
-                    </h1>
+                    </h3>
                 </div>
                 <div>
-                    <h4 style={textStyle}>
+                    <h6 style={textStyle}>
                         {this.state.timeScale}
-                    </h4>
+                    </h6>
                 </div>
 
             </div>
@@ -105,10 +142,15 @@ class CommitCard extends React.Component {
                     to 
                 </p>
 
-                <h3 style={textStyle}>
+                <h5 style={textStyle}>
                     {this.props.goal}
-                </h3>
+                </h5>
             </div>
+
+            <div style = {actionButtonStyle}>
+                {actionButton}
+            </div>
+            
 
         </Paper>
     );

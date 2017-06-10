@@ -31,9 +31,9 @@ class Creator extends React.Component {
     return (
       <div>
     
-        <CommitCard goal="Fly around the world 3 times" endTimestamp= {this.state.fakeTime}/>
-        <CommitCard goal="Arrive to mars" endTimestamp= {this.state.fakeTime+5600}/>
-        <CommitCard goal="Do the loundry" endTimestamp= {this.state.fakeTime+50000}/>
+        <CommitCard goal="Fly around the world 3 times" endTimestamp= {this.state.fakeTime} state="ongoing"/>
+        <CommitCard goal="Arrive to mars" endTimestamp= {this.state.fakeTime-5600} state="ongoing" />
+        <CommitCard goal="Do the loundry" endTimestamp= {this.state.fakeTime-50000} state="ongoing" />
         
         <FloatingActionButton onTouchTap= {this.onNewCommit} secondary={true} >
             <ContentAdd />
