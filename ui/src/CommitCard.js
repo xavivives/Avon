@@ -48,15 +48,13 @@ const textStyle =
     margin:5
 }
 
-
-
 class CommitCard extends React.Component {
 
     constructor(props) {
         super();
-        //EthereumBridge.startWatch();
+
         var timeUp = false;
-        var secondsLeft = props.endTimestamp - (Date.now()/1000);
+        var secondsLeft = props.data.endTimestamp - (Date.now()/1000);
         var timeIndicator = "left"
 
         if (secondsLeft < 0)
@@ -90,17 +88,17 @@ class CommitCard extends React.Component {
             timeLeft = Math.round(minutesLeft);
         }
 
-        if(timeUp===true && props.state=== "ongoing")
+        if(timeUp===true && props.data.state=== "ongoing")
         {
             timeLeft = "Time \nOut!"
             timeScale = "";
         }
  
-        if (props.state === "succeeded")
+        if (props.data.state === "succeeded")
         {
             connectionText = "You succeeded to"
         }
-        else if (props.state === "failed")
+        else if (props.data.state === "failed")
         {
             connectionText = "You failed to"
         }
@@ -115,7 +113,7 @@ class CommitCard extends React.Component {
 
     onResolve = () =>
     {
-        this.props.onResolve(this.props.commitId);
+        this.props.data.onResolve(this.props.data.commitId);
     }
 
   
@@ -131,8 +129,7 @@ class CommitCard extends React.Component {
           onTouchTap = {this.onResolve}
           disabled = {false}
         /> 
-    }
-        
+    }    
 
     return (
         <Paper style={containerStyle} zDepth={1} >
@@ -159,7 +156,7 @@ class CommitCard extends React.Component {
                 </p>
 
                 <h5 style={textStyle}>
-                    {this.props.goal}
+                    {this.props.data.goal}
                 </h5>
             </div>
 
