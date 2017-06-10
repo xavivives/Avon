@@ -1,9 +1,10 @@
 {
   "default": {
-    "gas":1000000 ,
+    "gas":"auto" ,
     "contracts":
     {
       "LetsGetShitDone1":{
+        "address":"0xe39fbac49a042e700d68aaf415ab8be53099dd61",
         "args":[]
       }
     }
