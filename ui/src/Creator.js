@@ -41,8 +41,6 @@ class Creator extends React.Component {
             amountText: "",
             allGood: false
         };
-
-        EthereumBridge.GetNumberOfCommits();
     }
 
     onCreateCommitment = () =>
