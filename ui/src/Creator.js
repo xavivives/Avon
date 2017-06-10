@@ -45,7 +45,7 @@ class Creator extends React.Component {
 
     onCreateCommitment = () =>
     {
-        EthereumBridge.CreateCommit(commitmentData);
+        EthereumBridge.createCommit(commitmentData);
         this.props.onCommitmentCreated();
     };
 

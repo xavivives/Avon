@@ -3,12 +3,12 @@ import Notifier from './Notifier';
 var bridge = {};
 var errorMessages = {};
 errorMessages.web3Missing = "A web3.js library is necessary to connect to Ethereum network. Ensure you're using a browser that supports it."
-errorMessages.connectionFail = "We're unable to stablish connection to an Ethereum node."
-errorMessages.invalidBeneficiaryAddress = "The beneficiary address is not correct";
+errorMessages.connectionFail = "Unable to connect to an Ethereum node";
+errorMessages.invalidBeneficiaryAddress = "Invalid beneficiary address";
 errorMessages.invalidDefaultAddress = "Invalid default address";
 errorMessages.missingContractData = "Missing contract data. Retrying";
 
-bridge.CreateCommit = function(commitmentData)
+bridge.createCommit = function(commitmentData)
 {
     if(!this.allGood(true))
         return;
@@ -32,7 +32,7 @@ bridge.CreateCommit = function(commitmentData)
         });
 }
 
-bridge.GetNumberOfCommitments = function ()
+bridge.getNumberOfCommitments = function ()
 {
     var that = this;
     return new Promise(function(resolve, reject)
@@ -47,7 +47,7 @@ bridge.GetNumberOfCommitments = function ()
     });
 }
 
-bridge.getAllCommitmentsData = function( numberOfCommitments)
+bridge.getAllCommitmentsData = function( numberOfCommitments) //TODO  duplicated code with GetCommitmentData
 {
     var that = this
     return new Promise(function(resolve, reject)
@@ -58,7 +58,7 @@ bridge.getAllCommitmentsData = function( numberOfCommitments)
             window.LetsGetShitDone1.GetCommitmentData(i).then(function(data)
                 {
                     var commitment = {};
-                    commitment.id = data[0];
+                    commitment.commitmentId = data[0];
                     commitment.goal = data[1];
                     commitment.beneficiary = data[2];
                     commitment.endTimestamp = data[3].toNumber();
@@ -72,6 +72,26 @@ bridge.getAllCommitmentsData = function( numberOfCommitments)
                     }
                 });
         }
+    });
+}
+
+bridge.getCommitmentData = function( commitmentId)
+{
+    var that = this
+    return new Promise(function(resolve, reject)
+    {
+        window.LetsGetShitDone1.GetCommitmentData(commitmentId).then(function(data)
+            {
+                var commitment = {};
+                commitment.commitmentId = data[0];
+                commitment.goal = data[1];
+                commitment.beneficiary = data[2];
+                commitment.endTimestamp = data[3].toNumber();
+                commitment.amount = window.web3.toWei(data[4]);
+                commitment.state = that.toState(data[5].toNumber());
+                
+                resolve(commitment);
+            });  
     });
 }
 
@@ -144,7 +164,7 @@ bridge.onContractLoaded = function()
             else
             {
                 window.setTimeout (function(){check()}, 500);
-                Notifier.notify(errorMessages.missingContractData);    
+                //Notifier.notify(errorMessages.missingContractData);    
             }
         }
         

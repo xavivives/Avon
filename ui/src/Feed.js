@@ -25,9 +25,9 @@ class Feed extends React.Component
         this.state = {"commitments" : [],"statusText":"Checking network..."};
     }
 
-    onResolve = (commitId) =>
+    onResolve = (commitmentId) =>
     {
-        this.props.onResolve(commitId);
+        this.props.onResolve(commitmentId);
     }
 
     onNewCommit = () =>
@@ -38,7 +38,7 @@ class Feed extends React.Component
     loadData = () =>
     {
         var that = this;
-        EthereumBridge.GetNumberOfCommitments().then(function(number){
+        EthereumBridge.getNumberOfCommitments().then(function(number){
             if(number===0)
             {
                 that.setState({
