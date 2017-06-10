@@ -12,7 +12,9 @@ const containerStyle =
     height : 100,
     padding : 15,
     marginTop : 10,
-    margnBottom : 30
+    margnBottom : 30,
+    marginLeft:5,
+    marginRight:5
 }
 
 const timeStyle =
@@ -21,7 +23,7 @@ const timeStyle =
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems:'center',
-    flexBasis:120,
+    flexBasis:100,
     flexGrow: 1
 }
 
@@ -31,14 +33,15 @@ const goalStyle =
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'flexStart',
-    flexGrow: 2
+    flexGrow: 4
 }
 
 const actionButtonStyle = 
 {
-    flexBasis:120,
-    flexGrow: 1
-}
+    flexBasis:100,
+    flexGrow: 1,
+    textAlign: 'center'
+}    
 
 const textStyle = 
 {
@@ -54,11 +57,13 @@ class CommitCard extends React.Component {
         //EthereumBridge.startWatch();
         var timeUp = false;
         var secondsLeft = props.endTimestamp - (Date.now()/1000);
+        var timeIndicator = "left"
 
         if (secondsLeft < 0)
         {
             timeUp = true;
             secondsLeft = 0-secondsLeft;
+            timeIndicator = "ago"
         }
 
         var minutesLeft = secondsLeft/60;
@@ -67,20 +72,21 @@ class CommitCard extends React.Component {
 
         var timeScale = "days";
         var timeLeft = daysLeft;
+        var connectionText = "to"
 
         if(daysLeft > 1)
         {
-            timeScale = "days";
+            timeScale = "days" + timeIndicator;
             timeLeft = Math.round(daysLeft);
         }
         else if( hoursLeft > 1)
         {
-            timeScale ="hours";
+            timeScale ="hours" + timeIndicator;;
             timeLeft = Math.round(hoursLeft);
         }
         else if( minutesLeft > 1)
         {
-            timeScale = "minutes";
+            timeScale = "min "+ timeIndicator;;
             timeLeft = Math.round(minutesLeft);
         }
 
@@ -89,17 +95,27 @@ class CommitCard extends React.Component {
             timeLeft = "Time \nOut!"
             timeScale = "";
         }
+ 
+        if (props.state === "succeeded")
+        {
+            connectionText = "You succeeded to"
+        }
+        else if (props.state === "failed")
+        {
+            connectionText = "You failed to"
+        }
 
         this.state = {
             "timeScale": timeScale,
             "timeLeft": timeLeft,
             "timeUp": timeUp,
+            "connectionText":connectionText
         };
     }
 
-    onResolve = () => {
-
-        //this.props.onNewCommit();
+    onResolve = () =>
+    {
+        this.props.onResolve(this.props.commitId);
     }
 
   
@@ -139,7 +155,7 @@ class CommitCard extends React.Component {
 
             <div style = {goalStyle}>
                 <p style={textStyle}>
-                    to 
+                    {this.state.connectionText}
                 </p>
 
                 <h5 style={textStyle}>
@@ -150,7 +166,6 @@ class CommitCard extends React.Component {
             <div style = {actionButtonStyle}>
                 {actionButton}
             </div>
-            
 
         </Paper>
     );
