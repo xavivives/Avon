@@ -11,13 +11,21 @@ const containerStyle =
     alignItems: 'center'
 }
 
-
 class Resolver extends React.Component {
 
-    constructor() {
+    constructor(props) {
         super();
+
         this.state = {};
-        //EthereumBridge.GetCommitmentData(this.props.commitmentId);
+        var that = this;
+        EthereumBridge.getCommitmentData(props.commitmentId).then(
+            function (data)
+            {
+                console.log(data);
+                that.setState({
+                    commitmentData: data,  
+                });
+            });
     }
 
     onSucceeded = () =>
@@ -30,25 +38,40 @@ class Resolver extends React.Component {
     {
         //EthereumBridge.Resolve(this.props.commitmentId, false);
         this.props.onResolved();
-
     };
 
 
-  render() {
+  render()
+  {
+    var networkStatus = <p style = {{'color':'#999999'}}> Fetching data...</p>;
+
+    console.log("A");
+    if(!this.state.commitmentData)
+    {
+        return(
+            <div>
+                {networkStatus} 
+            </div>
+        );
+    }
+    console.log("B");
+    
+    var question = "Did you succeeded to " + this.state.commitmentData.goal;
+    var withtdrawInfo = "If, you did, "+ this.state.commitmentData.amount  + "eth will be returned to your address,  otherwise they will be send to:"
+
 
     return (
       <div>
         <h3>
-            Did you succeeded to fly around the world?
+            {question}
         </h3>
 
         <p>
-            If, you did, 10 eth will be returned to your address,
-            otherwise they will be send to:
+            {withtdrawInfo}
         </p>
 
         <p style = {{'color':'#999999'}}>
-             0xcD5370578a6C99B6D1f78f6A1131EB25d7b64FD5
+             {this.state.commitmentData.beneficiary}
         </p>
 
 
@@ -64,7 +87,7 @@ class Resolver extends React.Component {
             <div>
                 <RaisedButton
                   label = "Nope, I failed"
-                  primary = {true}
+                  primary = {false}
                   onTouchTap = {this.onFailed}
                 />
             </div>
