@@ -7,7 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import EthereumBridge from './EthereumBridge';
 
 var addressesDirectory = {
-    "Creator": "0xcD5370578a6C99B6D1f78f6A1131EB25d7b64FD5",
+    "Creator": "0x67638EE841F555c996e4991F92696780FA95c444",
     "Burn": "0x0",
     "Empty": ""
 }

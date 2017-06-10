@@ -39,7 +39,7 @@ bridge.GetNumberOfCommitments = function ()
         if(!that.allGood(true))
             reject("No connection");
 
-        window.LetsGetShitDone1.GetAddressNumberOfCommitments().then(function(value)
+        window.LetsGetShitDone1.GetNumberOfCommitments().then(function(value)
             {
                 resolve(value.toNumber());
             });
@@ -57,12 +57,12 @@ bridge.getAllCommitmentsData = function( numberOfCommitments)
             window.LetsGetShitDone1.GetCommitmentData(i).then(function(data)
                 {
                     var commitment = {};
-                    commitment.id = -1 //TODO deploy contract that returns it
-                    commitment.goal = data[0];
-                    commitment.beneficiary = data[1];
-                    commitment.endTimestamp = data[2].toNumber();
-                    commitment.amount = window.web3.toWei(data[3]);
-                    commitment.state = that.toState(data[4].toNumber());
+                    commitment.id = data[0];
+                    commitment.goal = data[1];
+                    commitment.beneficiary = data[2];
+                    commitment.endTimestamp = data[3].toNumber();
+                    commitment.amount = window.web3.toWei(data[4]);
+                    commitment.state = that.toState(data[5].toNumber());
                     
                     commitments.push(commitment);
                     if(numberOfCommitments === commitments.length)

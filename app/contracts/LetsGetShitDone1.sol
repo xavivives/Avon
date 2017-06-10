@@ -86,14 +86,15 @@ contract LetsGetShitDone1
         }
     }
     
-    function GetAddressNumberOfCommitments() constant returns (uint)
+    function GetNumberOfCommitments() constant returns (uint)
     {
         return commitments[msg.sender].length;
     }
     
-    function GetCommitmentData(uint commitmentId) constant returns (string, address,uint, uint256, commitmentState)
+    function GetCommitmentData(uint commitmentId) constant returns (uint, string, address,uint, uint256, commitmentState)
     {
         return (
+            commitmentId,
             commitments[msg.sender][commitmentId].goal,
             commitments[msg.sender][commitmentId].beneficiary,
             commitments[msg.sender][commitmentId].endTimestamp,
