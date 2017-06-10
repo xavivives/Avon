@@ -7,7 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import EthereumBridge from './EthereumBridge';
 
 var addressesDirectory = {
-    "Creator": "0x99C2B57A30BeeDCDDE89f2445Af7E243E25784c8",
+    "Creator": "0xcD5370578a6C99B6D1f78f6A1131EB25d7b64FD5",
     "Burn": "0x0",
     "Empty": ""
 }
@@ -41,6 +41,8 @@ class Creator extends React.Component {
             amountText: "",
             allGood: false
         };
+
+        EthereumBridge.GetNumberOfCommits();
     }
 
     onCreateCommitment = () =>
@@ -51,7 +53,7 @@ class Creator extends React.Component {
 
     onGoalTextChanged = (e, newValue) =>
     {
-        if(newValue.length > 50 )
+        if(newValue.length > 30 )
             return;
 
         commitmentData.goal = newValue;
