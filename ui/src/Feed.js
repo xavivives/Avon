@@ -22,7 +22,7 @@ class Feed extends React.Component
         super();
         EthereumBridge.onContractLoaded().then(this.loadData);
  
-        this.state = {"commitments" : []};
+        this.state = {"commitments" : [],"statusText":"Checking network..."};
     }
 
     onResolve = (commitId) =>
@@ -39,11 +39,23 @@ class Feed extends React.Component
     {
         var that = this;
         EthereumBridge.GetNumberOfCommitments().then(function(number){
-            EthereumBridge.getAllCommitmentsData(number).then(function(commitments){
+            if(number===0)
+            {
                 that.setState({
-                    commitments: commitments,   
+                    statusText: "Nothing here yet...\n ",  
                 });
-        })}).catch(function(e){console.log(e);});
+            }
+            else
+            {
+                EthereumBridge.getAllCommitmentsData(number).then(function(commitments){
+                    that.setState({
+                        commitments: commitments, 
+                        statusText: "",  
+                    });
+                })
+            }
+            
+        })
     }
   
   render()
@@ -57,6 +69,10 @@ class Feed extends React.Component
 
     return (
       <div>
+
+        <p style ={{'textAlign':'center', 'color':'0#666666'}}>
+            {this.state.statusText}
+        </p> 
 
         <FloatingActionButton onTouchTap= {this.onNewCommit} secondary={true} style= {FloatingButtonStyle}>
             <ContentAdd />

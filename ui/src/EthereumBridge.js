@@ -1,4 +1,4 @@
-//import React from 'react';
+import Notifier from './Notifier';
 
 var bridge = {};
 var errorMessages = {};
@@ -6,6 +6,7 @@ errorMessages.web3Missing = "A web3.js library is necessary to connect to Ethere
 errorMessages.connectionFail = "We're unable to stablish connection to an Ethereum node."
 errorMessages.invalidBeneficiaryAddress = "The beneficiary address is not correct";
 errorMessages.invalidDefaultAddress = "Invalid default address";
+errorMessages.missingContractData = "Missing contract data. Retrying";
 
 bridge.CreateCommit = function(commitmentData)
 {
@@ -118,13 +119,13 @@ bridge.allGood = function (showWarnings)
     if(!this.isWeb3Avaialable())
     {
         if(showWarnings)
-            console.warn(errorMessages.web3Missing);
+            Notifier.notify(errorMessages.web3Missing);
         return false;
     }
     else if (!this.isConnectedToEtherumNode())
     {
         if(showWarnings)
-            console.warn(errorMessages.connectionFail);
+            Notifier.notify(errorMessages.connectionFail);
         return false;
     }
     return true;
@@ -141,7 +142,10 @@ bridge.onContractLoaded = function()
                 resolve();
             
             else
-                window.setTimeout (function(){check()}, 300);    
+            {
+                window.setTimeout (function(){check()}, 500);
+                Notifier.notify(errorMessages.missingContractData);    
+            }
         }
         
         check();        

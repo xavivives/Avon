@@ -8,6 +8,8 @@ import Resolver from './Resolver';
 import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import IconButton from 'material-ui/IconButton';
+import Notifier from './Notifier';
+import Snackbar from 'material-ui/Snackbar';
 
 injectTapEventPlugin();
 
@@ -20,8 +22,27 @@ class App extends Component {
 
         this.state = {
             currentPage:"Feed",
+            notificationOpen:false,
+            notificationMessage:""
         };
+
+        Notifier.addListener(this.onNotified);
     }
+
+    onNotified = (message) =>
+    {
+        this.setState({
+          notificationOpen: true,
+          notificationMessage:message
+        });
+    }
+
+    onNotificationClosed = () => {
+        this.setState({
+          notificationOpen: false,
+          notificationMessage:""
+        });
+    };
     
     onNewCommit = () =>
     {
@@ -109,16 +130,22 @@ class App extends Component {
             <div>
 
                 <AppBar title={title}
-                onLeftIconButtonTouchTap = {this.onLeftIconTap}
-                iconElementLeft={icon}/>
+                    onLeftIconButtonTouchTap = {this.onLeftIconTap}
+                    iconElementLeft={icon}/>
 
                 <div style = {{padding:15}}>
                     {content}
 
                 </div>
 
-            </div>
+                <Snackbar
+                    open={this.state.notificationOpen}
+                    message={this.state.notificationMessage}
+                    autoHideDuration={4000}
+                    onRequestClose={this.onNotificationClosed}
+                />
 
+            </div>
         </MuiThemeProvider>
       </div>
     );
