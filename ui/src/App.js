@@ -18,7 +18,7 @@ class App extends Component {
         super();
 
         this.state = {
-            currentPage:"Feed"
+            currentPage:"Feed",
         };
     }
     
@@ -54,20 +54,21 @@ class App extends Component {
   
   render() {
 
-    var  style = {
-      padding: 20
-    };
-
     var content =<Feed onNewCommit={this.onNewCommit} />;
     var icon = <IconButton><MenuIcon/></IconButton>;
+    var title = "Let's get shit done!"
 
     if(this.state.currentPage === "Feed")
     {
+        title = "Your commitments";
         content =<Feed onNewCommit={this.onNewCommit} />;
-        icon = <IconButton><MenuIcon/></IconButton>; 
+        //icon = <IconButton><MenuIcon/></IconButton>; 
+        icon = <IconButton></IconButton>; 
+
     }
     else if (this.state.currentPage === "Creator")
     {
+        title = "New commitment";
         content =<Creator onCommitmentCreated = {this.onCommitmentCreated}/>;
         icon = <IconButton><BackIcon/></IconButton>;
     }
@@ -77,11 +78,11 @@ class App extends Component {
         <MuiThemeProvider>
             <div>
 
-                <AppBar title="Set a goal"
+                <AppBar title={title}
                 onLeftIconButtonTouchTap = {this.onLeftIconTap}
                 iconElementLeft={icon}/>
 
-                <div style = {style}>
+                <div style = {{padding:20}}>
                     {content}
 
                 </div>
