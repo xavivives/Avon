@@ -4,14 +4,20 @@ import React from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import EthereumBridge from './EthereumBridge';
+import CommitCard from './CommitCard';
 
 class Creator extends React.Component {
 
     constructor() {
         super();
-        EthereumBridge.startWatch();
+        //EthereumBridge.startWatch();
+
+        var fakeTime= (Date.now()/1000)+(60*5);
+        console.log(fakeTime);
+        
         this.state = {
-        };
+            "fakeTime" : fakeTime
+        };  
     }
 
     onNewCommit = () => {
@@ -24,11 +30,10 @@ class Creator extends React.Component {
 
     return (
       <div>
-        <p>
-            Seems you've never commited to anything yet...
-            Why don't you try do something with your life by clicking the action button down below
-        </p>
-
+    
+        <CommitCard goal="Fly around the world 3 times" endTimestamp= {this.state.fakeTime}/>
+        <CommitCard goal="Arrive to mars" endTimestamp= {this.state.fakeTime+5600}/>
+        <CommitCard goal="Do the loundry" endTimestamp= {this.state.fakeTime+50000}/>
         
         <FloatingActionButton onTouchTap= {this.onNewCommit} secondary={true} >
             <ContentAdd />
