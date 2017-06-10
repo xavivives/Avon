@@ -1,10 +1,17 @@
 import React from 'react';
-
- 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import EthereumBridge from './EthereumBridge';
 import CommitCard from './CommitCard';
+
+const FloatingButtonStyle = {
+    margin: 0,
+    top: 'auto',
+    right: 20,
+    bottom: 20,
+    left: 'auto',
+    position: 'fixed',
+};
 
 class Creator extends React.Component {
 
@@ -35,7 +42,7 @@ class Creator extends React.Component {
         <CommitCard goal="Arrive to mars" endTimestamp= {this.state.fakeTime-5600} state="ongoing" />
         <CommitCard goal="Do the loundry" endTimestamp= {this.state.fakeTime-50000} state="ongoing" />
         
-        <FloatingActionButton onTouchTap= {this.onNewCommit} secondary={true} >
+        <FloatingActionButton onTouchTap= {this.onNewCommit} secondary={true} style= {FloatingButtonStyle}>
             <ContentAdd />
         </FloatingActionButton>
 
