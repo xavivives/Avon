@@ -40,7 +40,7 @@ class Feed extends React.Component
         var that = this;
         EthereumBridge.GetNumberOfCommitments().then(function(number){
             EthereumBridge.getAllCommitmentsData(number).then(function(commitments){
-                this.setState({
+                that.setState({
                     commitments: commitments,   
                 });
         })}).catch(function(e){console.log(e);});
