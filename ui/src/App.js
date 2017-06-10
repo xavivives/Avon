@@ -49,7 +49,6 @@ class App extends Component {
 
     onLeftIconTap = () =>
     {
-        console.log("tap");
         if(this.state.currentPage === "Feed")
         {
             
@@ -113,7 +112,7 @@ class App extends Component {
                 onLeftIconButtonTouchTap = {this.onLeftIconTap}
                 iconElementLeft={icon}/>
 
-                <div style = {{padding:20}}>
+                <div style = {{padding:15}}>
                     {content}
 
                 </div>
