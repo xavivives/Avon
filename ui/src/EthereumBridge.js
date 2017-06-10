@@ -31,15 +31,59 @@ bridge.CreateCommit = function(commitmentData)
         });
 }
 
-bridge.GetNumberOfCommits = function ()
+bridge.GetNumberOfCommitments = function ()
 {
-    if(!this.allGood(true))
-        return;
-
-    window.LetsGetShitDone1.GetAddressNumberOfCommitments({value: 0, gas: 500000}).then(function(value)
+    var that = this;
+    return new Promise(function(resolve, reject)
     {
-        console.log(value);
+        if(!that.allGood(true))
+            reject("No connection");
+
+        window.LetsGetShitDone1.GetAddressNumberOfCommitments().then(function(value)
+            {
+                resolve(value.toNumber());
+            });
     });
+}
+
+bridge.getAllCommitmentsData = function( numberOfCommitments)
+{
+    var that = this
+    return new Promise(function(resolve, reject)
+    {
+        var commitments = [];
+        for(var i = 0; i <= numberOfCommitments; i++)
+        {
+            window.LetsGetShitDone1.GetCommitmentData(i).then(function(data)
+                {
+                    var commitment = {};
+                    commitment.id = -1 //TODO deploy contract that returns it
+                    commitment.goal = data[0];
+                    commitment.beneficiary = data[1];
+                    commitment.endTimestamp = data[2].toNumber();
+                    commitment.amount = window.web3.toWei(data[3]);
+                    commitment.state = that.toState(data[4].toNumber());
+                    
+                    commitments.push(commitment);
+                    if(numberOfCommitments === commitments.length)
+                    {
+                        resolve(commitments);
+                    }
+                });
+        }
+    });
+}
+
+bridge.toState = function(int)
+{
+    if(int === 0)
+        return "ongoing";
+    else if( int === 1)
+        return "succeeded";
+    else if (int === 2)
+        return "failed"
+    else
+        return null;
 }
 
 bridge.startWatch = function()
@@ -84,6 +128,24 @@ bridge.allGood = function (showWarnings)
         return false;
     }
     return true;
+}
+
+bridge.onContractLoaded = function()
+{
+    var that = this;
+    return new Promise(function(resolve, reject)
+    {
+        var check = function ()
+        {
+            if(window.LetsGetShitDone1)
+                resolve();
+            
+            else
+                window.setTimeout (function(){check()}, 300);    
+        }
+        
+        check();        
+    });
 }
 
 bridge.getDefaultAddressBalance = function()
