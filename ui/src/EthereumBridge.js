@@ -6,6 +6,7 @@ errorMessages.web3Missing = "A web3.js library is necessary to connect to Ethere
 errorMessages.connectionFail = "We're unable to stablish connection to an Ethereum node."
 errorMessages.invalidBeneficiaryAddress = "The beneficiary address is not correct";
 errorMessages.invalidDefaultAddress = "Invalid default address";
+
 bridge.CreateCommit = function(commitmentData)
 {
     if(!this.allGood(true))
@@ -24,10 +25,21 @@ bridge.CreateCommit = function(commitmentData)
         commitmentData.goal,
         commitmentData.beneficiary,
         commitmentData.endTimestamp,
-        {value: window.web3.toWei(commitmentData.amount), gas: 5000000}).then(function(value)
+        {value: window.web3.toWei(commitmentData.amount), gas: 500000}).then(function(value)
             {
                 console.log(value);
         });
+}
+
+bridge.GetNumberOfCommits = function ()
+{
+    if(!this.allGood(true))
+        return;
+
+    window.LetsGetShitDone1.GetAddressNumberOfCommitments({value: 0, gas: 500000}).then(function(value)
+    {
+        console.log(value);
+    });
 }
 
 bridge.startWatch = function()
