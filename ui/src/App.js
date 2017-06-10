@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import AppBar from 'material-ui/AppBar';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 import Feed from './Feed';
 import Creator from './Creator';
 import Resolver from './Resolver';
 import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
+import StatusIcon from 'material-ui/svg-icons/av/equalizer';
 import IconButton from 'material-ui/IconButton';
 import Notifier from './Notifier';
 import Snackbar from 'material-ui/Snackbar';
@@ -23,6 +26,7 @@ class App extends Component {
         this.state = {
             currentPage:"Feed",
             notificationOpen:false,
+            dialogOpen:false,
             notificationMessage:""
         };
 
@@ -43,6 +47,14 @@ class App extends Component {
           notificationMessage:""
         });
     };
+
+    closeDialog = () => {
+        this.setState({dialogOpen: false});
+    };
+
+    openDialog = () => {
+        this.setState({dialogOpen: true});
+    };
     
     onNewCommit = () =>
     {
@@ -51,11 +63,11 @@ class App extends Component {
         });
     }
 
-    onResolve = (commitId) =>
+    onResolve = (commitmentId) =>
     {
        this.setState({
             currentPage: "Resolver",
-            commitId:commitId    
+            commitmentIdToResolve:commitmentId    
         });
     }
 
@@ -89,6 +101,11 @@ class App extends Component {
         }
     }
 
+    onRightIconTap = () =>
+    {
+        this.openDialog();
+    }
+
     onCommitmentCreated = ()=>
     {
         this.setState({
@@ -99,39 +116,61 @@ class App extends Component {
   render() {
 
     var content =<Feed onNewCommit={this.onNewCommit} />;
-    var icon = <IconButton><MenuIcon/></IconButton>;
+    var leftIcon = <IconButton><MenuIcon/></IconButton>;
     var title = "Let's get shit done!"
+    var rightIcon=<IconButton><StatusIcon/></IconButton>; 
 
     if(this.state.currentPage === "Feed")
     {
         title = "Your commitments";
         content =<Feed onNewCommit={this.onNewCommit} onResolve={this.onResolve} />;
-        //icon = <IconButton><MenuIcon/></IconButton>; 
-        icon = <IconButton></IconButton>; 
+        //leftIcon = <IconButton><MenuIcon/></IconButton>; 
+        leftIcon = <IconButton></IconButton>; 
+        rightIcon = <IconButton><StatusIcon/></IconButton>; 
 
     }
     else if (this.state.currentPage === "Creator")
     {
         title = "New commitment";
         content =<Creator onCommitmentCreated = {this.onCommitmentCreated}/>;
-        icon = <IconButton><BackIcon/></IconButton>;
+        leftIcon = <IconButton><BackIcon/></IconButton>;
     }
 
     else if (this.state.currentPage === "Resolver")
     {
         title = "Resolve commitment";
-        content =<Resolver onResolved = {this.onResolved}/>;
-        icon = <IconButton><BackIcon/></IconButton>;
+        content =<Resolver onResolved = {this.onResolved} commitmentId={this.state.commitmentIdToResolve}/>;
+        leftIcon = <IconButton><BackIcon/></IconButton>;
     }
 
+    var actions = [
+        <FlatButton
+            label="Got it"
+            primary={true}
+            keyboardFocused={true}
+            onTouchTap={this.closeDialog}
+        />
+    ];
+
     return (
+
       <div className="App">
         <MuiThemeProvider>
             <div>
 
+                <Dialog
+                    title="Let's get it done!   "
+                    actions={actions}
+                    modal={false}
+                    open={this.state.dialogOpen}
+                    onRequestClose={this.closeDialog}
+                />
+
                 <AppBar title={title}
                     onLeftIconButtonTouchTap = {this.onLeftIconTap}
-                    iconElementLeft={icon}/>
+                    iconElementLeft={leftIcon}
+                    onRightIconButtonTouchTap = {this.onRightIconTap}
+                    iconElementRight={rightIcon}/>
 
                 <div style = {{padding:15}}>
                     {content}
