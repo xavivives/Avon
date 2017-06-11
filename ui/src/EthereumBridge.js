@@ -38,8 +38,7 @@ bridge.createCommit = function(commitmentData)
             commitmentData.beneficiary,
             commitmentData.endTimestamp,
             {value: window.web3.toWei(commitmentData.amount), gas: 500000})
-            .then(function(value)
-            {
+            .then(function(value){
                 resolve(value);
             }).catch(function(e){reject(e)});
     });
@@ -47,17 +46,31 @@ bridge.createCommit = function(commitmentData)
 
 bridge.resolve = function(commitmentId,resolved)
 {
-    if(!this.allGood(true))
-        return;
+    var that = this;
+    return new Promise(function(resolve, reject)
+    {   
+        if(!that.allGood(true))
+        {
+            reject("Connection failed");
+            return;
+        }
 
-    window.web3.eth.defaultAccount=window.web3.eth.accounts[0];
-    window.LetsGetShitDone1.Resolve(
-        commitmentId,
-        resolved,
-        {value: 0, gas: 500000}).then(function(value)
-            {
-                console.log(value);
-        });
+        //window.web3.eth.defaultAccount=window.web3.eth.accounts[0];
+        
+        if(!that.isAddress(window.web3.eth.defaultAccount))
+        {console.log("address");
+            Notifier.notify(errorMessages.invalidDefaultAddress);
+            reject(errorMessages.invalidDefaultAddress);
+            return;
+        }
+
+        window.LetsGetShitDone1.Resolve(
+            commitmentId,
+            resolved,
+            {value: 0, gas: 500000}).then(function(value){
+                 resolve(value);
+        }).catch(function(e){console.log(e)});
+    });
 }
 
 

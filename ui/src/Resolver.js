@@ -1,6 +1,7 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import EthereumBridge from './EthereumBridge';
+import Notifier from './Notifier';
 
 const containerStyle =
 {
@@ -30,13 +31,26 @@ class Resolver extends React.Component {
 
     onSucceeded = () =>
     {
-        EthereumBridge.resolve(this.props.commitmentId, true);
+        EthereumBridge.resolve(this.props.commitmentId, true).then(function(value){
+            Notifier.notify("Commitment success! Funds returned");
+            Notifier.reloadFeed();
+        }).catch(function(e){
+            Notifier.notify(e);
+        });
+        Notifier.notify("Waiting for block confirmation...");
         this.props.onResolved();
     };
 
     onFailed = () =>
     {
-        EthereumBridge.resolve(this.props.commitmentId, false);
+        EthereumBridge.resolve(this.props.commitmentId, false).then(function(value){
+            Notifier.notify("Sorry to see you fail! Funds paid");
+            Notifier.reloadFeed();
+        }).catch(function(e){
+            console.log(e);
+            Notifier.notify(e);
+        });
+        Notifier.notify("Waiting for block confirmation...");
         this.props.onResolved();
     };
 
@@ -54,7 +68,7 @@ class Resolver extends React.Component {
         );
     }
     
-    var question = "Did you succeeded in" + this.state.commitmentData.goal +"?";
+    var question = "Did you succeeded in " + this.state.commitmentData.goal +"?";
     var withtdrawInfo = "If, you did, "+ this.state.commitmentData.amount  + " eth will be returned to your address,  otherwise they will be send to:"
 
     return (
