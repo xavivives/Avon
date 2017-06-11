@@ -186,12 +186,23 @@ bridge.allGood = function (showWarnings)
     }
     else if (!this.isConnectedToEtherumNode())
     {
-        if(showWarnings)
+        if(!window.web3.currentProvider)
+            this.switchProvider("http://localhost:8545");
+        else
+            this.switchProvider("http://localhost:8546");
+
+        if (!this.isConnectedToEtherumNode())
+        {
+            if(showWarnings)
             Notifier.notify(errorMessages.connectionFail);
-        return false;
+            return false;
+        }
+        Notifier.notify("Successfully connected. "+window.web3.currentProvider);
     }
+
     return true;
 }
+
 
 bridge.onContractLoaded = function()
 {
@@ -228,6 +239,11 @@ bridge.GetDefaultAddress = function()
 bridge.GetBalance = function(address)
 {
     return window.web3.eth.getBalance(address);
+}
+
+bridge.switchProvider = function (provider)
+{
+    window.web3.setProvider(new window.web3.providers.HttpProvider(provider));
 }
 
 export default bridge;
