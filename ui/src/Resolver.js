@@ -30,13 +30,13 @@ class Resolver extends React.Component {
 
     onSucceeded = () =>
     {
-        //EthereumBridge.Resolve(this.props.commitmentId, true);
+        EthereumBridge.resolve(this.props.commitmentId, true);
         this.props.onResolved();
     };
 
     onFailed = () =>
     {
-        //EthereumBridge.Resolve(this.props.commitmentId, false);
+        EthereumBridge.resolve(this.props.commitmentId, false);
         this.props.onResolved();
     };
 
@@ -45,7 +45,6 @@ class Resolver extends React.Component {
   {
     var networkStatus = <p style = {{'color':'#999999'}}> Fetching data...</p>;
 
-    console.log("A");
     if(!this.state.commitmentData)
     {
         return(
@@ -54,11 +53,9 @@ class Resolver extends React.Component {
             </div>
         );
     }
-    console.log("B");
     
-    var question = "Did you succeeded to " + this.state.commitmentData.goal;
-    var withtdrawInfo = "If, you did, "+ this.state.commitmentData.amount  + "eth will be returned to your address,  otherwise they will be send to:"
-
+    var question = "Did you succeeded in" + this.state.commitmentData.goal +"?";
+    var withtdrawInfo = "If, you did, "+ this.state.commitmentData.amount  + " eth will be returned to your address,  otherwise they will be send to:"
 
     return (
       <div>
