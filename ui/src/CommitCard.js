@@ -9,7 +9,7 @@ const containerStyle =
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height : 100,
+    height : 80,
     padding : 15,
     marginTop : 10,
     margnBottom : 30,
@@ -23,8 +23,9 @@ const timeStyle =
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems:'center',
-    flexBasis:100,
-    flexGrow: 1
+    flexBasis:60,
+    flexGrow: 1,
+    color:'#9E9E9E'
 }
 
 const goalStyle =
@@ -38,7 +39,7 @@ const goalStyle =
 
 const actionButtonStyle = 
 {
-    flexBasis:100,
+    flexBasis:80,
     flexGrow: 1,
     textAlign: 'center'
 }    
@@ -48,13 +49,34 @@ const textStyle =
     margin:5
 }
 
+const sucessStyle = 
+{
+    margin:5,
+    color:'green'
+}
+
+const failStyle = 
+{
+    margin:5,
+    color:'red'
+}
+
 class CommitCard extends React.Component {
 
     constructor(props) {
         super();
+    }
+
+    onResolve = () =>
+    {
+        this.props.onResolve(this.props.data.commitmentId);
+    }
+
+    render()
+    {
 
         var timeUp = false;
-        var secondsLeft = props.data.endTimestamp - (Date.now()/1000);
+        var secondsLeft = this.props.data.endTimestamp - (Date.now()/1000);
         var timeIndicator = "left"
 
         if (secondsLeft < 0)
@@ -88,48 +110,56 @@ class CommitCard extends React.Component {
             timeLeft = Math.round(minutesLeft);
         }
 
-        if(timeUp===true && props.data.state=== "ongoing")
+         var goalText = this.props.data.goal;
+
+        if(timeUp===true && this.props.data.state=== "ongoing")
         {
             timeLeft = "Time \nOut!"
             timeScale = "";
+            goalText = "To "+ goalText;
+            connectionText = "";
+        }
+
+        if(timeUp===false && this.props.data.state=== "ongoing")
+        {
+            goalText = "To "+ goalText;
+            connectionText = "";
         }
  
-        if (props.data.state === "succeeded")
+        var connectionElement;
+
+        if (this.props.data.state === "succeeded")
         {
             connectionText = "You succeeded to"
+            connectionElement = <p style={sucessStyle}> {connectionText} </p>;
         }
-        else if (props.data.state === "failed")
+        else if (this.props.data.state === "failed")
         {
             connectionText = "You failed to"
+            connectionElement = <p style={failStyle}> {connectionText} </p>;
         }
 
-        this.state = {
-            "timeScale": timeScale,
-            "timeLeft": timeLeft,
-            "timeUp": timeUp,
-            "connectionText":connectionText
-        };
-    }
-
-    onResolve = () =>
-    {
-        this.props.onResolve(this.props.data.commitmentId);
-    }
-
-    render()
-    {
-
-    var actionButton = null;
-
-        if(this.state.timeUp && this.props.data.state==="ongoing")
+        var actionButton = null;
+        var timeLeftElement = <h3 style={{textAlign:"center", margin:5}}> {timeLeft} </h3>
+        
+        if(timeUp && this.props.data.state==="ongoing")
         {
-            actionButton = <RaisedButton
-              label = "Resolve"
-              primary = {true}
-              onTouchTap = {this.onResolve}
-              disabled = {false}
-            /> 
-        }    
+            actionButton =
+            <div style = {actionButtonStyle}>
+                <RaisedButton
+                  label = "Resolve"
+                  primary = {true}
+                  onTouchTap = {this.onResolve}
+                  disabled = {false}
+                /> 
+            </div>
+
+            timeLeftElement = <h5 style={{textAlign:"center", margin:5}}> {timeLeft} </h5>
+        
+        } 
+
+
+        
 
         return (
             <Paper style={containerStyle} zDepth={1} >
@@ -137,13 +167,11 @@ class CommitCard extends React.Component {
                 <div style = {timeStyle}>
 
                     <div>
-                        <h3 style={{textAlign:"center", margin:5}}>
-                            {this.state.timeLeft}
-                        </h3>
+                        {timeLeftElement}
                     </div>
                     <div>
                         <h6 style={textStyle}>
-                            {this.state.timeScale}
+                            {timeScale}
                         </h6>
                     </div>
 
@@ -151,19 +179,16 @@ class CommitCard extends React.Component {
 
 
                 <div style = {goalStyle}>
-                    <p style={textStyle}>
-                        {this.state.connectionText}
-                    </p>
+
+                    {connectionElement}
 
                     <h5 style={textStyle}>
-                        {this.props.data.goal}
+                        {goalText}
                     </h5>
                 </div>
 
-                <div style = {actionButtonStyle}>
-                    {actionButton}
-                </div>
-
+                {actionButton}
+                
             </Paper>
         );
     }
