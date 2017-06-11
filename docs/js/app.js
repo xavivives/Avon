@@ -4220,7 +4220,7 @@ var XHR2 = require('xhr2'); // jshint ignore: line
  * HttpProvider should be used to send rpc calls over http
  */
 var HttpProvider = function (host, timeout) {
-    this.host = host || 'http://localhost:8545';
+    this.host = host || 'http://localhost:8546';
     this.timeout = timeout || 0;
 };
 
@@ -78233,7 +78233,7 @@ var EmbarkJS =
 	    this.currentMessages = EmbarkJS.Messages.Whisper;
 	    if (typeof variable === 'undefined' && typeof(web3) === 'undefined') {
 	      if (options === undefined) {
-	        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8546"));
 	      } else {
 	        web3 = new Web3(new Web3.providers.HttpProvider("http://" + options.server + ':' + options.port));
 	      }
@@ -78456,7 +78456,7 @@ whenEnvIsLoaded(function() {
 if (typeof web3 !== 'undefined' && typeof Web3 !== 'undefined') {
 	web3 = new Web3(web3.currentProvider);
 } else if (typeof Web3 !== 'undefined') {
-	web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8546"));
 }
 web3.eth.defaultAccount = web3.eth.accounts[0];
 })
