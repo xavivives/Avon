@@ -13,6 +13,7 @@ import StatusIcon from 'material-ui/svg-icons/av/equalizer';
 import IconButton from 'material-ui/IconButton';
 import Notifier from './Notifier';
 import Snackbar from 'material-ui/Snackbar';
+import StatusContent from './StatusContent';
 
 injectTapEventPlugin();
 
@@ -27,7 +28,8 @@ class App extends Component {
             currentPage:"Feed",
             notificationOpen:false,
             dialogOpen:false,
-            notificationMessage:""
+            notificationMessage:"",
+            reload:true
         };
 
         Notifier.addListener(this.onNotified);
@@ -132,7 +134,7 @@ class App extends Component {
     else if (this.state.currentPage === "Creator")
     {
         title = "New commitment";
-        content =<Creator onCommitmentCreated = {this.onCommitmentCreated}/>;
+        content =<Creator onCommitmentCreated = {this.onCommitmentCreated} />;
         leftIcon = <IconButton><BackIcon/></IconButton>;
     }
 
@@ -163,8 +165,11 @@ class App extends Component {
                     actions={actions}
                     modal={false}
                     open={this.state.dialogOpen}
-                    onRequestClose={this.closeDialog}
-                />
+                    onRequestClose={this.closeDialog}>
+
+                    <StatusContent/>
+
+                </Dialog>
 
                 <AppBar title={title}
                     onLeftIconButtonTouchTap = {this.onLeftIconTap}
@@ -180,7 +185,7 @@ class App extends Component {
                 <Snackbar
                     open={this.state.notificationOpen}
                     message={this.state.notificationMessage}
-                    autoHideDuration={4000}
+                    autoHideDuration={5000}
                     onRequestClose={this.onNotificationClosed}
                 />
 
