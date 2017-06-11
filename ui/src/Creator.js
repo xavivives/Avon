@@ -27,7 +27,8 @@ var goalTextSuggestions = [
     "run 100km",
     "close all my bank accounts",
     "setup a Monero node",
-    "plant a tree"
+    "plant a tree",
+    "ride an emu"
 ];
 
 class Creator extends React.Component {
