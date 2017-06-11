@@ -5,32 +5,61 @@ var errorMessages = {};
 errorMessages.web3Missing = "A web3.js library is necessary to connect to Ethereum network. Ensure you're using a browser that supports it."
 errorMessages.connectionFail = "Unable to connect to an Ethereum node";
 errorMessages.invalidBeneficiaryAddress = "Invalid beneficiary address";
-errorMessages.invalidDefaultAddress = "Invalid default address";
+errorMessages.invalidDefaultAddress = "Your default address is not available/valid";
 errorMessages.missingContractData = "Missing contract data. Retrying";
 
 bridge.createCommit = function(commitmentData)
 {
+    var that = this;
+    return new Promise(function(resolve, reject)
+    {
+        if(!that.allGood(true))
+        {
+            reject("Connection failed");
+            return;
+        }
+
+        if(!that.isAddress(commitmentData.beneficiary))
+        {
+            Notifier.notify(errorMessages.invalidBeneficiaryAddress);
+            reject(errorMessages.invalidBeneficiaryAddress);
+            return;
+        }
+
+        if(!that.isAddress(window.web3.eth.defaultAccount))
+        {
+            Notifier.notify(errorMessages.invalidDefaultAddress);
+            reject(errorMessages.invalidDefaultAddress);
+            return;
+        }
+
+        window.LetsGetShitDone1.Commit(
+            commitmentData.goal,
+            commitmentData.beneficiary,
+            commitmentData.endTimestamp,
+            {value: window.web3.toWei(commitmentData.amount), gas: 500000})
+            .then(function(value)
+            {
+                resolve(value);
+            }).catch(function(e){reject(e)});
+    });
+}
+
+bridge.resolve = function(commitmentId,resolved)
+{
     if(!this.allGood(true))
         return;
 
-    if(!this.isAddress(commitmentData.beneficiary))
-        console.warn(errorMessages.invalidBeneficiaryAddress);
-
-    if(!this.isAddress(window.web3.eth.defaultAccount))
-        console.warn(errorMessages.invalidDefaultAddress);
-
-    console.log(window.web3.eth.defaultAccount);
-    console.log(commitmentData);
     window.web3.eth.defaultAccount=window.web3.eth.accounts[0];
-    window.LetsGetShitDone1.Commit(
-        commitmentData.goal,
-        commitmentData.beneficiary,
-        commitmentData.endTimestamp,
-        {value: window.web3.toWei(commitmentData.amount), gas: 500000}).then(function(value)
+    window.LetsGetShitDone1.Resolve(
+        commitmentId,
+        resolved,
+        {value: 0, gas: 500000}).then(function(value)
             {
                 console.log(value);
         });
 }
+
 
 bridge.getNumberOfCommitments = function ()
 {
@@ -62,7 +91,7 @@ bridge.getAllCommitmentsData = function( numberOfCommitments) //TODO  duplicated
                     commitment.goal = data[1];
                     commitment.beneficiary = data[2];
                     commitment.endTimestamp = data[3].toNumber();
-                    commitment.amount = window.web3.toWei(data[4]);
+                    commitment.amount = window.web3.fromWei(data[4]);
                     commitment.state = that.toState(data[5].toNumber());
                     
                     commitments.push(commitment);
@@ -87,7 +116,7 @@ bridge.getCommitmentData = function( commitmentId)
                 commitment.goal = data[1];
                 commitment.beneficiary = data[2];
                 commitment.endTimestamp = data[3].toNumber();
-                commitment.amount = window.web3.toWei(data[4]);
+                commitment.amount = window.web3.fromWei(data[4]);
                 commitment.state = that.toState(data[5].toNumber());
                 
                 resolve(commitment);
@@ -153,7 +182,6 @@ bridge.allGood = function (showWarnings)
 
 bridge.onContractLoaded = function()
 {
-    var that = this;
     return new Promise(function(resolve, reject)
     {
         var check = function ()
@@ -162,10 +190,7 @@ bridge.onContractLoaded = function()
                 resolve();
             
             else
-            {
-                window.setTimeout (function(){check()}, 500);
-                //Notifier.notify(errorMessages.missingContractData);    
-            }
+                window.setTimeout (function(){check()}, 500);  
         }
         
         check();        
@@ -177,31 +202,19 @@ bridge.getDefaultAddressBalance = function()
     window.web3.fromWei(window.web3.eth.getBalance(window.web3.eth.coinbase));
 }
 
-bridge.isAddress = function (address) {
-    // function isAddress(address) {
-        if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-        // check if it has the basic requirements of an address
-        return false;
-    } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
-        // If it's all small caps or all all caps, return "true
-        return true;
-    } else {
-        // Otherwise check each case
-        return this.isChecksumAddress(address);
-    }
+bridge.isAddress = function (address)
+{
+    return window.web3.isAddress(address);
 }
 
-
-bridge.isChecksumAddress = function (address) {
-    // Check each case
-    address = address.replace('0x','');
-    var addressHash = window.web3.sha3(address.toLowerCase());
-    for (var i = 0; i < 40; i++ ) {
-        // the nth letter should be uppercase if the nth digit of casemap is 1
-        if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
-            return false;
-        }
-    }
-    return true;
+bridge.GetDefaultAddress = function()
+{
+    return window.web3.eth.defaultAccount;
 }
+
+bridge.GetBalance = function(address)
+{
+    return window.web3.eth.getBalance(address);
+}
+
 export default bridge;
