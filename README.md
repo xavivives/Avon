@@ -1,7 +1,13 @@
-# No name yet
+# DApp and bot for Status.im
 
-A Đapp/bot to bet agains yourself on what you can achive.
+Hackathon GitHub Issue: https://github.com/status-im/hackathon/issues/65
 
-This project participates at the Status.im hackathon.
+```
+{"whisper-identity": "154-get-it-done",
+  "name":             "#65 Get it done!",
+  "dapp-url":         "https://xavivives.github.io/Avon/",
+  "bot-url":          "https://xavivives.github.io/Avon/js/bot.js"}
+```
 
-https://hackathon.status.im
+[*Note:* Put your full project description in your GitHub Issue RSVP. You may copy it below here, but we will review it on the GitHub Issue. ⚠️]
+
