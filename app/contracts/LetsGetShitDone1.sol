@@ -24,11 +24,9 @@ contract LetsGetShitDone1
     mapping (address => commitmentData[]) commitments;
 
     event CommitmentCreatedSuccesfully(uint commitmentId, int secondsLeft);
-    event NoTimeYet(uint commitmentId, int secondsLeft);
+    event NoTimeYet(uint commitmentId, int secondsLeft); //To remove
     event DoneAndFundsReturned(uint commitmentId, uint256 paidAmount, address owner, int secondsLeft);
-    event NotDoneAndFunsPaid(uint commitmentId, uint256 paidAmount, address beneficiary, int secondsLeft);
-    event CommitmentIsResolvedAlready(uint commitmentId);
-    event TheCommitmentYouAreLookingForDoesntExistOrYouHaventCreatedOneYet(uint commitmentId);
+    event NotDoneAndFundsPaid(uint commitmentId, uint256 paidAmount, address beneficiary, int secondsLeft);
     event GotFreeMoney(uint256 newAmount, uint256 unknowTotal);
 
     function LetsGetShitDone1()  payable
@@ -62,11 +60,9 @@ contract LetsGetShitDone1
         if(commitments[msg.sender][commitmentId].state != commitmentState.ongoing) 
             throw;
             
-        if(block.timestamp < commitments[msg.sender][commitmentId].endTimestamp ) 
-        {
-            NoTimeYet(commitmentId, int(commitments[msg.sender][commitmentId].endTimestamp) - int(block.timestamp));
+        if(block.timestamp < commitments[msg.sender][commitmentId].endTimestamp )  
             throw;
-        }
+        
 
         if(succeeded)
         {
@@ -82,7 +78,7 @@ contract LetsGetShitDone1
                 throw;
 
             commitments[msg.sender][commitmentId].state = commitmentState.failed;
-            NotDoneAndFunsPaid(commitmentId,commitments[msg.sender][commitmentId].amount, msg.sender, int(commitments[msg.sender][commitmentId].endTimestamp) - int(block.timestamp));
+            NotDoneAndFundsPaid(commitmentId,commitments[msg.sender][commitmentId].amount, msg.sender, int(commitments[msg.sender][commitmentId].endTimestamp) - int(block.timestamp));
         }
     }
     
