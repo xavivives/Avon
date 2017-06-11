@@ -68,18 +68,18 @@ class CommitCard extends React.Component {
         var hoursLeft = minutesLeft/60;
         var daysLeft = hoursLeft/24;
 
-        var timeScale = "days";
+        var timeScale = "days ";
         var timeLeft = daysLeft;
         var connectionText = "to"
 
         if(daysLeft > 1)
         {
-            timeScale = "days" + timeIndicator;
+            timeScale = "days " + timeIndicator;
             timeLeft = Math.round(daysLeft);
         }
         else if( hoursLeft > 1)
         {
-            timeScale ="hours" + timeIndicator;;
+            timeScale ="hours " + timeIndicator;;
             timeLeft = Math.round(hoursLeft);
         }
         else if( minutesLeft > 1)
@@ -121,7 +121,7 @@ class CommitCard extends React.Component {
 
     var actionButton = null;
 
-        if(this.state.timeUp)
+        if(this.state.timeUp && this.props.data.state==="ongoing")
         {
             actionButton = <RaisedButton
               label = "Resolve"
