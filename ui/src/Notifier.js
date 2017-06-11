@@ -4,12 +4,22 @@ var notifier = {};
 
 notifier.addListener = function (callback)
 {
-    this.callback = callback;
+    this.notifyCallback = callback;
 }
 
 notifier.notify = function(message)
 {
-    this.callback(message);
+    this.notifyCallback(message);
+}
+
+notifier.addReloadListener = function (callback)
+{
+    this.reloadFeedCallback = callback;
+}
+
+notifier.reloadFeed = function (callback)
+{
+    this.reloadFeedCallback();
 }
 
 

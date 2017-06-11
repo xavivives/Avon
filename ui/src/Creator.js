@@ -5,6 +5,7 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import EthereumBridge from './EthereumBridge';
+import Notifier from './Notifier';
 
 var addressesDirectory = {
     "Creator": "0x67638EE841F555c996e4991F92696780FA95c444",
@@ -25,7 +26,8 @@ var goalTextSuggestions = [
     "make a Đapp",
     "run 100km",
     "close all my bank accounts",
-    "setup a Monero node"
+    "setup a Monero node",
+    "plant a tree"
 ];
 
 class Creator extends React.Component {
@@ -45,8 +47,18 @@ class Creator extends React.Component {
 
     onCreateCommitment = () =>
     {
-        EthereumBridge.createCommit(commitmentData);
-        this.props.onCommitmentCreated();
+        var that = this;
+        EthereumBridge.createCommit(commitmentData).then(function(value)
+        {
+            Notifier.notify("Commitment successfully added!");
+            Notifier.reloadFeed();
+
+        }).catch(function(e){
+            Notifier.notify("Transaction failed. Commitment not added.");
+        });
+
+        Notifier.notify("Waiting for block confirmation...");
+        that.props.onCommitmentCreated();
     };
 
     onGoalTextChanged = (e, newValue) =>

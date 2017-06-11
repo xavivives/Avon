@@ -3,6 +3,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import EthereumBridge from './EthereumBridge';
 import CommitCard from './CommitCard';
+import Notifier from './Notifier';
 
 const FloatingButtonStyle = {
     margin: 0,
@@ -16,10 +17,10 @@ const FloatingButtonStyle = {
 
 class Feed extends React.Component
 {
-
     constructor()
     {
         super();
+        Notifier.addReloadListener(this.loadData);
         EthereumBridge.onContractLoaded().then(this.loadData);
  
         this.state = {"commitments" : [],"statusText":"Checking network..."};
@@ -47,7 +48,11 @@ class Feed extends React.Component
             }
             else
             {
-                EthereumBridge.getAllCommitmentsData(number).then(function(commitments){
+                EthereumBridge.getAllCommitmentsData(number).then(function(commitments)
+                {
+
+                    commitments.sort(function(a,b){return(b.commitmentId-a.commitmentId)});
+
                     that.setState({
                         commitments: commitments, 
                         statusText: "",  
@@ -64,7 +69,7 @@ class Feed extends React.Component
     var commitments = [];
     for (var i =0; i<this.state.commitments.length; i++)
     {
-        commitments.push( <CommitCard data = {this.state.commitments[i]} onResolve = {this.onResolve}/>);
+        commitments.push( <CommitCard key= {this.state.commitments[i].commitmentId} data = {this.state.commitments[i]} onResolve = {this.onResolve}/>);
     }
 
     return (
