@@ -186,7 +186,7 @@ bridge.allGood = function (showWarnings)
     }
     else if (!this.isConnectedToEtherumNode())
     {
-        if(!window.web3.currentProvider)
+        /*if(!window.web3.currentProvider)
             this.switchProvider("http://localhost:8545");
         else
             this.switchProvider("http://localhost:8546");
@@ -196,7 +196,14 @@ bridge.allGood = function (showWarnings)
             if(showWarnings)
             Notifier.notify(errorMessages.connectionFail);
             return false;
+        }*/
+        if(showWarnings)
+        {
+            Notifier.notify("Unable to connect. "+window.web3.currentProvider);
+            return false;
         }
+            
+
         Notifier.notify("Successfully connected. "+window.web3.currentProvider);
     }
 
@@ -244,6 +251,14 @@ bridge.GetBalance = function(address)
 bridge.switchProvider = function (provider)
 {
     window.web3.setProvider(new window.web3.providers.HttpProvider(provider));
+}
+
+bridge.getProviderString = function (provider)
+{
+    if(!window.web3)
+        return "No web3 object"
+
+    return window.web3.currentProvider.toString();
 }
 
 export default bridge;

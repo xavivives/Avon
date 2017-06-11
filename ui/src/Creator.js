@@ -155,21 +155,23 @@ class Creator extends React.Component {
             onChange = {this.onAmountTextChanged}/>
 
         <p>
-            to this address
+            
         </p>
 
         <DropDownMenu value={this.state.beneficiaryAddressKey} onChange={this.onAddressSelected}>
-          <MenuItem value="Creator" primaryText="the creator of this Đapp" />
-          <MenuItem value="Empty" primaryText="a new address" />
+          <MenuItem value="Creator" primaryText="To the creator of this Đapp" />
+          <MenuItem value="Empty" primaryText="To a new address" />
           <MenuItem value="Burn" primaryText="Burn the money" />
         </DropDownMenu>
 
-        <TextField hintText="Ethererum account address" value = {this.state.beneficiaryAddress} />
+         <p>
+            <TextField hintText="beneficiary address" value = {this.state.beneficiaryAddress} />
+         </p>
         <p>
             
         </p>
         <RaisedButton
-          label = "Let's get shit done!"
+          label = "Let's get it done!"
           secondary = {true}
           onTouchTap = {this.onCreateCommitment}
           disabled = {!this.state.allGood}

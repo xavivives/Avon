@@ -14,8 +14,8 @@ class StatusContent extends React.Component {
 
 
         this.state = {
-            'userAddress':EthereumBridge.GetDefaultAddress(),
-            'userBalance':EthereumBridge.GetBalance(EthereumBridge.GetDefaultAddress())
+            'connected': EthereumBridge.isConnectedToEtherumNode().toString(),
+            'provider':EthereumBridge.getProviderString()
         };
     }
 
@@ -23,16 +23,25 @@ class StatusContent extends React.Component {
     {
         return (          
             <div>
-                <p>
-                    Your current address
-                </p>
-                <p style={addressStyle}>
-                    {this.state.userAddress}
-                </p> 
 
-                <p>
-                    {this.state.userBalance}
+                <p style={addressStyle}>
+                    This Đapp was developed by Xavi Vives as part of the Status hackathon.   
+                </p>
+                <p style={addressStyle}>  
+                    Looking for opportunities
+                </p>
+
+                <p>  
+                    http://xavivives.com/index
                 </p> 
+                <p>  
+                    
+                </p> 
+                <p style={addressStyle}>
+                    Connected : {this.state.connected}
+                </p>
+
+
             </div>
                     
         );
