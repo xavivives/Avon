@@ -22,7 +22,6 @@ class Resolver extends React.Component {
         EthereumBridge.getCommitmentData(props.commitmentId).then(
             function (data)
             {
-                console.log(data);
                 that.setState({
                     commitmentData: data,  
                 });
@@ -32,10 +31,10 @@ class Resolver extends React.Component {
     onSucceeded = () =>
     {
         EthereumBridge.resolve(this.props.commitmentId, true).then(function(value){
-            Notifier.notify("Commitment success! Funds returned");
+            Notifier.notify("Commitment success! Funds returned.");
             Notifier.reloadFeed();
         }).catch(function(e){
-            Notifier.notify(e);
+            Notifier.notify("Transaction failed. Commitment not resolved.");
         });
         Notifier.notify("Waiting for block confirmation...");
         this.props.onResolved();
@@ -44,11 +43,11 @@ class Resolver extends React.Component {
     onFailed = () =>
     {
         EthereumBridge.resolve(this.props.commitmentId, false).then(function(value){
-            Notifier.notify("Sorry to see you fail! Funds paid");
+            Notifier.notify("Sorry to see you fail! Funds paid.");
             Notifier.reloadFeed();
         }).catch(function(e){
             console.log(e);
-            Notifier.notify(e);
+            Notifier.notify("Transaction failed. Commitment not resolved.");
         });
         Notifier.notify("Waiting for block confirmation...");
         this.props.onResolved();

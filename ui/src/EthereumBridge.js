@@ -58,7 +58,7 @@ bridge.resolve = function(commitmentId,resolved)
         //window.web3.eth.defaultAccount=window.web3.eth.accounts[0];
         
         if(!that.isAddress(window.web3.eth.defaultAccount))
-        {console.log("address");
+        {
             Notifier.notify(errorMessages.invalidDefaultAddress);
             reject(errorMessages.invalidDefaultAddress);
             return;
@@ -69,7 +69,7 @@ bridge.resolve = function(commitmentId,resolved)
             resolved,
             {value: 0, gas: 500000}).then(function(value){
                  resolve(value);
-        }).catch(function(e){console.log(e)});
+        }).catch(function(e){reject(e)});
     });
 }
 
